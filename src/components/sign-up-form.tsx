@@ -1,30 +1,20 @@
 import React from "react";
+import { SignUpProps, SignUpState } from "../interfaces/sign-up";
 import "./sign-up-form.scss";
 
-const Regex = RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-
-interface SignUpProps {
-  name?: any;
-  value?: any;
-}
-interface SignUpState {
-  username: string;
-  email: string;
-  password: string;
-  errors: {
-    username: string;
-    email: string;
-    password: string;
-  };
-}
+const Regex = RegExp(
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+);
 
 export class SignUp extends React.Component<SignUpProps, SignUpState> {
   constructor(props: SignUpProps) {
     super(props);
     const initialState = {
-      username: "",
-      email: "",
-      password: "",
+      user: {
+        username: "",
+        email: "",
+        password: "",
+      },
       errors: {
         username: "",
         email: "",
@@ -39,35 +29,31 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     event.preventDefault();
     const { name, value } = event.target;
     let errors = this.state.errors;
+    let user = this.state.user;
     switch (name) {
-      case "fullName":
+      case "username":
+        user.username = value;
         errors.username =
           value.length < 5 ? "Username must be 5 characters long!" : "";
         break;
       case "email":
+        user.email = value;
         errors.email = Regex.test(value) ? "" : "Email is not valid!";
         break;
       case "password":
+        user.password = value;
         errors.password =
           value.length < 8 ? "Password must be eight characters long!" : "";
         break;
       default:
         break;
     }
-    this.setState(Object.assign(this.state, { errors, [name]: value }));
+    this.setState(Object.assign(this.state, { user, errors, [name]: value }));
   };
 
   handleSubmit = (event: any) => {
+    console.log(this.state.user);
     event.preventDefault();
-    let validity = true;
-    Object.values(this.state.errors).forEach(
-      (val) => val.length > 0 && (validity = false)
-    );
-    if (validity === true) {
-      console.log("Registering can be done");
-    } else {
-      console.log("You cannot be registered!!!");
-    }
   };
 
   render() {
@@ -80,14 +66,14 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
             onSubmit={this.handleSubmit}
             noValidate
           >
-            <div className="full-name">
-              <label className="input-label" htmlFor="fullName">
+            <div className="username">
+              <label className="input-label" htmlFor="username">
                 Full Name
               </label>
               <input
                 className="input"
                 type="text"
-                name="fullName"
+                name="username"
                 placeholder="Enter full name"
                 onChange={this.handleChange}
               />
