@@ -1,10 +1,9 @@
 import './App.scss';
+import { SignUp } from './components/sign-up-form';
 
 function App() {
   return (
-    <div className="App">
-      This is the app page
-    </div>
+    <SignUp />
   );
 }
 
