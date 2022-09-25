@@ -1,22 +1,21 @@
 import React from "react";
-import { SignUpProps, SignUpState } from "../interfaces/sign-up";
-import "./sign-up-form.scss";
+import { Link } from "react-router-dom";
+import { LoginProps, LoginState } from "../../interfaces/login";
+import "./login-page.scss";
 
 const Regex = RegExp(
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 );
 
-export class SignUp extends React.Component<SignUpProps, SignUpState> {
-  constructor(props: SignUpProps) {
+export class LoginPage extends React.Component<LoginProps, LoginState> {
+  constructor(props: LoginProps) {
     super(props);
     const initialState = {
       user: {
-        username: "",
         email: "",
         password: "",
       },
       errors: {
-        username: "",
         email: "",
         password: "",
       },
@@ -31,11 +30,6 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     let errors = this.state.errors;
     let user = this.state.user;
     switch (name) {
-      case "username":
-        user.username = value;
-        errors.username =
-          value.length < 5 ? "Username must be 5 characters long!" : "";
-        break;
       case "email":
         user.email = value;
         errors.email = Regex.test(value) ? "" : "Email is not valid!";
@@ -60,29 +54,12 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     return (
       <div className="wrapper">
         <div className="form-wrapper">
-          <h2 className="form-header">Sign Up</h2>
+          <h2 className="form-header">Login</h2>
           <form
             className="sign-up-form"
             onSubmit={this.handleSubmit}
             noValidate
           >
-            <div className="username">
-              <label className="input-label" htmlFor="username">
-                Username
-              </label>
-              <input
-                className="input"
-                type="text"
-                name="username"
-                placeholder="Enter username"
-                onChange={this.handleChange}
-              />
-              {this.state.errors.username.length > 0 && (
-                <span className="input-error">
-                  {this.state.errors.username}
-                </span>
-              )}
-            </div>
             <div className="email">
               <label className="input-label" htmlFor="email">
                 Email
@@ -115,7 +92,10 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 </span>
               )}
             </div>
-            <button className="submit-button">Register Me</button>
+            <div className="login-buttons-container">
+              <Link to="/signup">Signup</Link>
+              <Link to="/home">Login</Link>
+            </div>
           </form>
         </div>
       </div>

@@ -9,6 +9,7 @@ export interface SignUpProps {
   value?: any;
 }
 export interface SignUpState {
+  pageDirection?: string;
   user: user;
   errors: {
     username: string;
