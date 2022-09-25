@@ -12,7 +12,6 @@ export class SignUpPage extends React.Component<SignUpProps, SignUpState> {
   constructor(props: SignUpProps) {
     super(props);
     const initialState = {
-      pageDirection: "/",
       user: {
         username: "",
         email: "",
@@ -61,12 +60,16 @@ export class SignUpPage extends React.Component<SignUpProps, SignUpState> {
     ) {
       return console.log("Username and password are required");
     } else {
-      this.setState({ pageDirection: "/" });
       await signup(this.state.user.email, this.state.user.password);
     }
   }
 
   render() {
+    let pageDirection: string =
+      this.state.user.email.trim() === "" ||
+      this.state.user.password.trim() === ""
+        ? ""
+        : "/";
     return (
       <div className="wrapper">
         <div className="form-wrapper">
@@ -122,10 +125,7 @@ export class SignUpPage extends React.Component<SignUpProps, SignUpState> {
               )}
             </div>
             <div className="sign-up-buttons-container">
-              <Link
-                onClick={this.registerSubmit.bind(this)}
-                to={this.state.pageDirection!}
-              >
+              <Link onClick={this.registerSubmit.bind(this)} to={pageDirection}>
                 Register Me
               </Link>
             </div>
