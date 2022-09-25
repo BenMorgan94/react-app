@@ -68,13 +68,13 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
           >
             <div className="username">
               <label className="input-label" htmlFor="username">
-                Full Name
+                Username
               </label>
               <input
                 className="input"
                 type="text"
                 name="username"
-                placeholder="Enter full name"
+                placeholder="Enter username"
                 onChange={this.handleChange}
               />
               {this.state.errors.username.length > 0 && (
