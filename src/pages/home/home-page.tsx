@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../../firebase/firebaseSetup";
 import { ContentCard } from "../../interfaces/contentCard";
@@ -10,10 +10,10 @@ interface State {
 }
 
 export class HomePage extends React.Component<{}, State> {
-  textInput: any;
+  textInput: RefObject<HTMLInputElement>;
 
-  constructor() {
-    super({});
+  constructor(props: {}) {
+    super(props);
     this.textInput = React.createRef(); // Refactor this ref stuff, not nice >:(
   }
 
@@ -46,7 +46,7 @@ export class HomePage extends React.Component<{}, State> {
       ],
     }));
 
-    this.textInput.current.value = null;
+    this.textInput.current!.value = "";
   };
 
   render() {
