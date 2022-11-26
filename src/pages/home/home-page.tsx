@@ -1,16 +1,85 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../../firebase/firebaseSetup";
+import { ContentCard } from "../../interfaces/contentCard";
 import "./home-page.scss";
 
-export class HomePage extends React.Component {
+interface State {
+  newContentCard: ContentCard;
+  contentCards: ContentCard[];
+}
+
+export class HomePage extends React.Component<{}, State> {
+  textInput: any;
+
+  constructor() {
+    super({});
+    this.textInput = React.createRef(); // Refactor this ref stuff, not nice >:(
+  }
+
+  state = {
+    newContentCard: {
+      key: 0,
+      text: "",
+    },
+    contentCards: [],
+  };
+
+  inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      newContentCard: {
+        key: Math.random(),
+        text: event.target.value,
+      },
+    });
+  };
+
+  postContent = () => {
+    this.setState((previousState) => ({
+      newContentCard: {
+        key: this.state.newContentCard.key,
+        text: this.state.newContentCard.text,
+      },
+      contentCards: [
+        ...previousState.contentCards,
+        previousState.newContentCard,
+      ],
+    }));
+
+    this.textInput.current.value = null;
+  };
+
   render() {
     return (
-      <div>
-        <div>Homepage</div>
-        <Link to="/">
-          <button onClick={logout}>Logout</button>
-        </Link>
+      <div className="homepage">
+        <div className="sidemenu">
+          <Link to="/">
+            <button onClick={logout}>Logout</button>
+          </Link>
+        </div>
+        <div className="content">
+          <div className="newsfeed-container">
+            <div className="editable-content">
+              <input ref={this.textInput} onChange={this.inputChange}></input>
+              <button
+                disabled={
+                  this.textInput.current?.value === "" ||
+                  this.textInput.current?.value === undefined
+                }
+                onClick={this.postContent}
+              >
+                Post
+              </button>
+            </div>
+            <div className="posted-content">
+              {this.state.contentCards.map((contentCard: ContentCard) => (
+                <div className="content-card" key={contentCard.key}>
+                  {contentCard.text}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
