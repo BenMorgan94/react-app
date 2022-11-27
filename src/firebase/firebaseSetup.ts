@@ -66,4 +66,9 @@ export async function logout() {
     });
 }
 
+export function getUsername(): string {
+  const userName = auth.currentUser!.displayName || "";
+  return userName;
+}
+
 export const db = getFirestore(app);

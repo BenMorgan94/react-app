@@ -1,6 +1,6 @@
 import React, { RefObject } from "react";
 import { Link } from "react-router-dom";
-import { logout } from "../../firebase/firebaseSetup";
+import { getUsername, logout } from "../../firebase/firebaseSetup";
 import { ContentCard } from "../../interfaces/contentCard";
 import "./home-page.scss";
 
@@ -11,25 +11,33 @@ interface State {
 
 export class HomePage extends React.Component<{}, State> {
   textInput: RefObject<HTMLInputElement>;
+  userName: string;
 
   constructor(props: {}) {
     super(props);
     this.textInput = React.createRef();
+    this.userName = ""
   }
 
   state = {
     newContentCard: {
       key: 0,
       text: "",
+      userName: "",
     },
     contentCards: [],
   };
 
   inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (this.userName.length === 0) {
+      this.userName = getUsername();
+    }
+
     this.setState({
       newContentCard: {
         key: Math.random(),
         text: event.target.value,
+        userName: this.userName,
       },
     });
   };
@@ -74,7 +82,8 @@ export class HomePage extends React.Component<{}, State> {
             <div className="posted-content">
               {this.state.contentCards.map((contentCard: ContentCard) => (
                 <div className="content-card" key={contentCard.key}>
-                  {contentCard.text}
+                  <div className="avatar">{contentCard.userName?.slice(0, 2)}</div>
+                  <div className="text">{contentCard.text}</div>
                 </div>
               ))}
             </div>
