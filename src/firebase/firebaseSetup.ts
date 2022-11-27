@@ -5,6 +5,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -20,9 +21,14 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export async function signup(email: string, password: string) {
+export async function signup(
+  username: string,
+  email: string,
+  password: string
+) {
   createUserWithEmailAndPassword(auth, email, password)
     .then((cred) => {
+      updateProfile(auth.currentUser!, { displayName: username });
       console.log("user created:", cred.user);
     })
     .catch((err) => {
@@ -31,14 +37,14 @@ export async function signup(email: string, password: string) {
 }
 
 export async function login(email: string, password: string) {
-    signInWithEmailAndPassword(auth, email, password)
-    .then(cred => {
-      console.log('user logged in:', cred.user)
+  signInWithEmailAndPassword(auth, email, password)
+    .then((cred) => {
+      console.log("user logged in:", cred.user);
     })
-    .catch(err => {
-      console.log(err.message)
-    })
-  }
+    .catch((err) => {
+      console.log(err.message);
+    });
+}
 
 export async function logout() {
   signOut(auth)

@@ -60,7 +60,7 @@ export class SignUpPage extends React.Component<SignUpProps, SignUpState> {
     ) {
       return console.log("Username and password are required");
     } else {
-      await signup(this.state.user.email, this.state.user.password);
+      await signup(this.state.user.username, this.state.user.email, this.state.user.password);
     }
   }
 
