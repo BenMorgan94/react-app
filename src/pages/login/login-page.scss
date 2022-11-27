@@ -63,27 +63,26 @@
         justify-content: space-between;
         text-align: center;
 
-        a, button {
-            width: 40%;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 14px;
-            margin-top: 12px;
-            border: none;
-            border-radius: 4px;
-            background-color: #0a8ea9;
-            color: white;
-            text-decoration: none;
+        button {
+          width: 40%;
+          font-size: 16px;
+          cursor: pointer;
+          padding: 14px;
+          margin-top: 12px;
+          border: none;
+          border-radius: 4px;
+          background-color: #0a8ea9;
+          color: white;
 
-            &[disabled] {
-              cursor: auto;
-              background-color: lightgrey;
-            }
-    
-            &:hover:not([disabled]) {
-              background-color: #0db7d9;
-            }
+          &[disabled] {
+            cursor: auto;
+            background-color: lightgrey;
           }
+
+          &:hover:not([disabled]) {
+            background-color: #0db7d9;
+          }
+        }
       }
     }
   }
