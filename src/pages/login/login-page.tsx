@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { login } from "../../firebase/firebaseSetup";
 import { LoginProps, LoginState } from "../../interfaces/login";
 import "./login-page.scss";
@@ -28,6 +27,10 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
   async login() {
     await login(this.state.user.email, this.state.user.password, "home");
   }
+
+  signup = () => {
+    window.location.href = "signup";
+  };
 
   handleChange = (event: any) => {
     event.preventDefault();
@@ -98,7 +101,7 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
               )}
             </div>
             <div className="login-buttons-container">
-              <Link to="/signup">Signup</Link>
+              <button onClick={this.signup}>Signup</button>
               <button
                 disabled={
                   this.state.user.email?.length === 0 ||
