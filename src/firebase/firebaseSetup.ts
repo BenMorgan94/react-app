@@ -7,6 +7,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
+import { toast } from "../components/toasts/toasts";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCJxPecW3Om_8yqAVrluPagAzqxK1n5ETM",
@@ -36,14 +37,22 @@ export async function signup(
     });
 }
 
-export async function login(email: string, password: string, pageNavigation: string) {
+export async function login(
+  email: string,
+  password: string,
+  pageNavigation: string
+) {
   signInWithEmailAndPassword(auth, email, password)
     .then((cred) => {
       window.location.href = pageNavigation;
       console.log("user logged in:", cred.user);
     })
-    .catch((err) => {
-      console.log(err.message);
+    .catch(() => {
+      toast.show({
+        title: "Login error",
+        content: "This user doesn't exist, please check your email and password!",
+        duration: 3000,
+      });
     });
 }
 

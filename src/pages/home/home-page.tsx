@@ -14,7 +14,7 @@ export class HomePage extends React.Component<{}, State> {
 
   constructor(props: {}) {
     super(props);
-    this.textInput = React.createRef(); // Refactor this ref stuff, not nice >:(
+    this.textInput = React.createRef();
   }
 
   state = {
