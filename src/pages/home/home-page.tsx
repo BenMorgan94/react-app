@@ -1,6 +1,7 @@
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import React, { RefObject } from "react";
 import { Link } from "react-router-dom";
-import { getUsername, logout } from "../../firebase/firebaseSetup";
+import { db, getUsername, logout } from "../../firebase/firebaseSetup";
 import { ContentCard } from "../../interfaces/contentCard";
 import "./home-page.scss";
 
@@ -16,7 +17,7 @@ export class HomePage extends React.Component<{}, State> {
   constructor(props: {}) {
     super(props);
     this.textInput = React.createRef();
-    this.userName = ""
+    this.userName = "";
   }
 
   state = {
@@ -27,6 +28,23 @@ export class HomePage extends React.Component<{}, State> {
     },
     contentCards: [],
   };
+
+  async componentWillMount() {
+    const docQuery = await getDocs(collection(db, "newsfeed"));
+    docQuery.forEach((doc) => {
+      let card = doc.data() as ContentCard;
+      this.setState((previousState) => ({
+        contentCards: [
+          {
+            key: card.key,
+            text: card.text,
+            userName: card.userName,
+          },
+          ...previousState.contentCards,
+        ],
+      }));
+    });
+  }
 
   inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (this.userName.length === 0) {
@@ -42,7 +60,7 @@ export class HomePage extends React.Component<{}, State> {
     });
   };
 
-  postContent = () => {
+  postContent = async () => {
     this.setState((previousState) => ({
       newContentCard: {
         key: this.state.newContentCard.key,
@@ -53,6 +71,12 @@ export class HomePage extends React.Component<{}, State> {
         previousState.newContentCard,
       ],
     }));
+
+    await addDoc(collection(db, "newsfeed"), {
+      key: this.state.newContentCard.key,
+      text: this.state.newContentCard.text,
+      userName: this.state.newContentCard.userName,
+    });
 
     this.textInput.current!.value = "";
   };
@@ -82,7 +106,9 @@ export class HomePage extends React.Component<{}, State> {
             <div className="posted-content">
               {this.state.contentCards.map((contentCard: ContentCard) => (
                 <div className="content-card" key={contentCard.key}>
-                  <div className="avatar">{contentCard.userName?.slice(0, 2)}</div>
+                  <div className="avatar">
+                    {contentCard.userName?.slice(0, 2)}
+                  </div>
                   <div className="text">{contentCard.text}</div>
                 </div>
               ))}
