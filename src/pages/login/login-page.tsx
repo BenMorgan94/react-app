@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { login } from "../../firebase/firebaseSetup";
 import { LoginProps, LoginState } from "../../interfaces/login";
 import "./login-page.scss";
 
@@ -22,6 +23,10 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
     };
     this.state = initialState;
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  async login() {
+    await login(this.state.user.email, this.state.user.password, "home");
   }
 
   handleChange = (event: any) => {
@@ -94,7 +99,15 @@ export class LoginPage extends React.Component<LoginProps, LoginState> {
             </div>
             <div className="login-buttons-container">
               <Link to="/signup">Signup</Link>
-              <Link to="/home">Login</Link>
+              <button
+                disabled={
+                  this.state.user.email?.length === 0 ||
+                  this.state.user.password?.length === 0
+                }
+                onClick={this.login.bind(this)}
+              >
+                Login
+              </button>
             </div>
           </form>
         </div>

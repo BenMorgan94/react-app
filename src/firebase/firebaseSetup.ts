@@ -36,9 +36,10 @@ export async function signup(
     });
 }
 
-export async function login(email: string, password: string) {
+export async function login(email: string, password: string, pageNavigation: string) {
   signInWithEmailAndPassword(auth, email, password)
     .then((cred) => {
+      window.location.href = pageNavigation;
       console.log("user logged in:", cred.user);
     })
     .catch((err) => {
