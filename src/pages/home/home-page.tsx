@@ -1,4 +1,11 @@
-import { addDoc, collection, deleteDoc, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import React, { RefObject } from "react";
 import { Link } from "react-router-dom";
 import { db, getUsername, logout } from "../../firebase/firebaseSetup";
@@ -32,7 +39,9 @@ export class HomePage extends React.Component<{}, State> {
   };
 
   async componentWillMount() {
-    const docQuery = await getDocs(collection(db, "newsfeed"));
+    const docQuery = await getDocs(
+      query(collection(db, "newsfeed"), orderBy("postedDate", "asc"))
+    );
     docQuery.forEach((doc) => {
       let card = doc.data() as ContentCard;
       this.setState((previousState) => ({
@@ -73,8 +82,8 @@ export class HomePage extends React.Component<{}, State> {
         postedDate: this.state.newContentCard.postedDate,
       },
       contentCards: [
-        ...previousState.contentCards,
         previousState.newContentCard,
+        ...previousState.contentCards,
       ],
     }));
 
