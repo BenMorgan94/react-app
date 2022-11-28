@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { db, getUsername, logout } from "../../firebase/firebaseSetup";
 import { ContentCard } from "../../interfaces/contentCard";
 import "./home-page.scss";
+import moment from "moment";
 
 interface State {
   newContentCard: ContentCard;
@@ -25,6 +26,7 @@ export class HomePage extends React.Component<{}, State> {
       key: 0,
       text: "",
       userName: "",
+      postedDate: "",
     },
     contentCards: [],
   };
@@ -39,6 +41,7 @@ export class HomePage extends React.Component<{}, State> {
             key: card.key,
             text: card.text,
             userName: card.userName,
+            postedDate: card.postedDate,
           },
           ...previousState.contentCards,
         ],
@@ -56,6 +59,7 @@ export class HomePage extends React.Component<{}, State> {
         key: Math.random(),
         text: event.target.value,
         userName: this.userName,
+        postedDate: moment().format("LLL"),
       },
     });
   };
@@ -65,6 +69,8 @@ export class HomePage extends React.Component<{}, State> {
       newContentCard: {
         key: this.state.newContentCard.key,
         text: this.state.newContentCard.text,
+        userName: this.state.newContentCard.userName,
+        postedDate: this.state.newContentCard.postedDate,
       },
       contentCards: [
         ...previousState.contentCards,
@@ -76,6 +82,7 @@ export class HomePage extends React.Component<{}, State> {
       key: this.state.newContentCard.key,
       text: this.state.newContentCard.text,
       userName: this.state.newContentCard.userName,
+      postedDate: this.state.newContentCard.postedDate,
     });
 
     this.textInput.current!.value = "";
@@ -87,16 +94,18 @@ export class HomePage extends React.Component<{}, State> {
 
     //delete from state
     this.setState({
-      contentCards: this.state.contentCards.filter((contentCard: ContentCard) => {
-        return contentCard.text !== currentCardText;
-      }),
+      contentCards: this.state.contentCards.filter(
+        (contentCard: ContentCard) => {
+          return contentCard.text !== currentCardText;
+        }
+      ),
     });
 
     // delete from DB
     docQuery.forEach((doc) => {
       let card = doc.data() as ContentCard;
       if (card.text === currentCardText) {
-        deleteDoc(doc.ref)
+        deleteDoc(doc.ref);
       }
     });
   };
@@ -126,6 +135,7 @@ export class HomePage extends React.Component<{}, State> {
             <div className="posted-content">
               {this.state.contentCards.map((contentCard: ContentCard) => (
                 <div className="content-card" key={contentCard.key}>
+                  <div className="date">{contentCard.postedDate}</div>
                   <div className="avatar">
                     {contentCard.userName?.slice(0, 2)}
                   </div>
