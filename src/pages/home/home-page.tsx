@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, getDocs } from "firebase/firestore";
 import React, { RefObject } from "react";
 import { Link } from "react-router-dom";
 import { db, getUsername, logout } from "../../firebase/firebaseSetup";
@@ -81,6 +81,26 @@ export class HomePage extends React.Component<{}, State> {
     this.textInput.current!.value = "";
   };
 
+  deleteCard = async (event: any) => {
+    const docQuery = await getDocs(collection(db, "newsfeed"));
+    const currentCardText = event.target.parentNode.innerHTML.split("<")[0];
+
+    //delete from state
+    this.setState({
+      contentCards: this.state.contentCards.filter((contentCard: ContentCard) => {
+        return contentCard.text !== currentCardText;
+      }),
+    });
+
+    // delete from DB
+    docQuery.forEach((doc) => {
+      let card = doc.data() as ContentCard;
+      if (card.text === currentCardText) {
+        deleteDoc(doc.ref)
+      }
+    });
+  };
+
   render() {
     return (
       <div className="homepage">
@@ -109,7 +129,12 @@ export class HomePage extends React.Component<{}, State> {
                   <div className="avatar">
                     {contentCard.userName?.slice(0, 2)}
                   </div>
-                  <div className="text">{contentCard.text}</div>
+                  <div className="text-and-button">
+                    {contentCard.text}
+                    <button className="delete" onClick={this.deleteCard}>
+                      X
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
